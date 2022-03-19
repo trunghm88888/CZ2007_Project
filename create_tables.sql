@@ -1,4 +1,4 @@
-USE DSS2g3;
+USE DSS2g3_Test;
 GO
 
 CREATE SCHEMA Shiokee;
@@ -44,7 +44,7 @@ CREATE TABLE Shiokee.[Order](
 
     PRIMARY KEY(OrderID),
     FOREIGN KEY(UserID) REFERENCES Shiokee.[User](UserID)
-        ON DELETE NO ACTION /* No need ON UPDATE because
+        ON DELETE NO ACTION, /* No need ON UPDATE because
                             IDENTITY cannot be updated */
 );
 GO
@@ -60,7 +60,8 @@ CREATE TABLE Shiokee.Complaint(
 
     PRIMARY KEY(CID),
     FOREIGN KEY(UserID) REFERENCES Shiokee.[User](UserID)
-        ON DELETE NO ACTION,
+        ON DELETE NO ACTION, /* No need ON UPDATE because
+                            IDENTITY cannot be updated */
     FOREIGN KEY(EID) REFERENCES Shiokee.Employee(EID)
         ON DELETE SET NULL
 );
@@ -95,15 +96,83 @@ CREATE TABLE Shiokee.Product_in_order(
 
     PRIMARY KEY(OrderID, OPID),
     FOREIGN KEY(OrderID) REFERENCES Shiokee.[Order](OrderID)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
+        ON DELETE CASCADE, /* No need ON UPDATE because
+                            IDENTITY cannot be updated */
     FOREIGN KEY(SName) REFERENCES Shiokee.Shop(SName)
         ON DELETE NO ACTION
         ON UPDATE CASCADE,
 );
 GO
 
+CREATE TABLE Shiokee.Complaint_on_shop(
+    CID INT NOT NULL,
+    SName VARCHAR(50) NOT NULL,
 
+    PRIMARY KEY(CID),
+    FOREIGN KEY(CID) REFERENCES Shiokee.Complaint(CID)
+        ON DELETE CASCADE, /* No need ON UPDATE because
+                            IDENTITY cannot be updated */
+    FOREIGN KEY(SName) REFERENCES Shiokee.Shop(SName)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,    
+);
+GO
+
+CREATE TABLE Shiokee.Complaint_on_order(
+    CID INT NOT NULL,
+    OrderID INT NOT NULL,
+
+    PRIMARY KEY(CID),
+    FOREIGN KEY(CID) REFERENCES Shiokee.Complaint(CID)
+        ON DELETE CASCADE, /* No need ON UPDATE because
+                            IDENTITY cannot be updated */
+    FOREIGN KEY(OrderID) REFERENCES Shiokee.[Order](OrderID)
+        ON DELETE CASCADE, /* No need ON UPDATE because
+                            IDENTITY cannot be updated */    
+);
+GO
+
+CREATE TABLE Shiokee.Price_history(
+    SName VARCHAR(50) NOT NULL,
+    PName VARCHAR(50) NOT NULL,
+    StartDate DATETIME NOT NULL,
+    EndDate DATETIME NOT NULL,
+    Price INT NOT NULL CHECK(Price >= 0),
+
+    PRIMARY KEY(SName, PName, StartDate, EndDate),
+    FOREIGN KEY(SName) REFERENCES Shiokee.Shop(SName)
+        ON DELETE NO ACTION
+        ON UPDATE CASCADE,
+    FOREIGN KEY(PName) REFERENCES Shiokee.Product(PName)
+        ON DELETE NO ACTION
+        ON UPDATE CASCADE,
+);
+GO
+
+CREATE TABLE Shiokee.Feedback(
+    UserID INT NOT NULL,
+    OrderID INT NOT NULL,
+    SName VARCHAR(50) NOT NULL,
+    PName VARCHAR(50) NOT NULL,
+    FDateTime DATETIME NOT NULL,
+    Rating INT NOT NULL CHECK(Rating >= 1 AND Rating <= 5),
+    Comment VARCHAR(500),
+
+    PRIMARY KEY(UserID, FDateTime),
+    FOREIGN KEY(UserID) REFERENCES Shiokee.[User](UserID)
+        ON DELETE NO ACTION, /* No need ON UPDATE because
+                            IDENTITY cannot be updated */
+    FOREIGN KEY(OrderID) REFERENCES Shiokee.[Order](OrderID)
+        ON DELETE NO ACTION, /* No need ON UPDATE because
+                            IDENTITY cannot be updated */
+    FOREIGN KEY(SName) REFERENCES Shiokee.Shop(SName)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY(PName) REFERENCES Shiokee.Product(PName)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+);
+GO
 
 
 
