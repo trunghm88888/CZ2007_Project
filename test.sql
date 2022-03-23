@@ -1,2 +1,1 @@
-USE DSS2g3_Test;
-GO
+USE DSS2g3;

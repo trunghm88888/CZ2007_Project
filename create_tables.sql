@@ -1,13 +1,13 @@
-USE DSS2g3_Test;
+USE DSS2g3;
 GO
 
 CREATE SCHEMA Shiokee;
 GO
 
 CREATE TABLE Shiokee.Product(
-    PName VARCHAR(50) NOT NULL,
-    Maker VARCHAR(50),
-    Category VARCHAR(50) NOT NULL,
+    PName VARCHAR(255) NOT NULL,
+    Maker VARCHAR(255),
+    Category VARCHAR(255) NOT NULL,
 
     PRIMARY KEY(PName)
 );
@@ -15,14 +15,14 @@ GO
 
 CREATE TABLE Shiokee.[User](
     UserID INT IDENTITY(1, 1),
-    UName VARCHAR(50),
+    UName VARCHAR(255),
 
     PRIMARY KEY(UserID)
 );
 GO
 
 CREATE TABLE Shiokee.Shop(
-    SName VARCHAR(50) NOT NULL,
+    SName VARCHAR(255) NOT NULL,
 
     PRIMARY KEY(SName)
 );
@@ -30,7 +30,7 @@ GO
 
 CREATE TABLE Shiokee.Employee(
     EID INT IDENTITY(1, 1),
-    EName VARCHAR(50) NOT NULL,
+    EName VARCHAR(255) NOT NULL,
     Salary INT NOT NULL CHECK(Salary >= 0),
 
     PRIMARY KEY(EID)
@@ -40,7 +40,7 @@ CREATE TABLE Shiokee.[Order](
     OrderID INT IDENTITY(1, 1),
     UserID INT NOT NULL,
     OrderDateTime DATETIME NOT NULL,
-    ShippingAddress VARCHAR(150) NOT NULL,
+    ShippingAddress VARCHAR(255) NOT NULL,
 
     PRIMARY KEY(OrderID),
     FOREIGN KEY(UserID) REFERENCES Shiokee.[User](UserID)
@@ -52,7 +52,7 @@ GO
 CREATE TABLE Shiokee.Complaint(
     CID INT IDENTITY(1, 1),
     FiledDateTime DATETIME NOT NULL,
-    ComplaintStatus VARCHAR(20) NOT NULL,
+    ComplaintStatus VARCHAR(255) NOT NULL,
     ComplaintText VARCHAR(500),
     UserID INT NOT NULL,
     EID INT,
@@ -68,8 +68,8 @@ CREATE TABLE Shiokee.Complaint(
 GO
 
 CREATE TABLE Shiokee.Product_in_shop(
-    PName VARCHAR(50) NOT NULL,
-    SName VARCHAR(50) NOT NULL,
+    PName VARCHAR(255) NOT NULL,
+    SName VARCHAR(255) NOT NULL,
     SPID INT,
     SPrice INT NOT NULL CHECK(SPrice >= 0),
     SQuantity INT NOT NULL,
@@ -85,14 +85,14 @@ CREATE TABLE Shiokee.Product_in_shop(
 GO
 
 CREATE TABLE Shiokee.Product_in_order(
-    PName VARCHAR(50) NOT NULL,
+    PName VARCHAR(255) NOT NULL,
     OPID INT NOT NULL,
     OPrice INT NOT NULL CHECK(OPrice >= 0),
     OQuantity INT NOT NULL CHECK(OQuantity > 0),
-    OStatus VARCHAR(20) NOT NULL DEFAULT '“being processed',
+    OStatus VARCHAR(255) NOT NULL DEFAULT '“being processed',
     DeliveryDate DATETIME,
     OrderID INT NOT NULL,
-    SName VARCHAR(50) NOT NULL,
+    SName VARCHAR(255) NOT NULL,
 
     PRIMARY KEY(OrderID, OPID),
     FOREIGN KEY(OrderID) REFERENCES Shiokee.[Order](OrderID)
@@ -106,7 +106,7 @@ GO
 
 CREATE TABLE Shiokee.Complaint_on_shop(
     CID INT NOT NULL,
-    SName VARCHAR(50) NOT NULL,
+    SName VARCHAR(255) NOT NULL,
 
     PRIMARY KEY(CID),
     FOREIGN KEY(CID) REFERENCES Shiokee.Complaint(CID)
@@ -133,8 +133,8 @@ CREATE TABLE Shiokee.Complaint_on_order(
 GO
 
 CREATE TABLE Shiokee.Price_history(
-    SName VARCHAR(50) NOT NULL,
-    PName VARCHAR(50) NOT NULL,
+    SName VARCHAR(255) NOT NULL,
+    PName VARCHAR(255) NOT NULL,
     StartDate DATETIME NOT NULL,
     EndDate DATETIME NOT NULL,
     Price INT NOT NULL CHECK(Price >= 0),
@@ -152,8 +152,8 @@ GO
 CREATE TABLE Shiokee.Feedback(
     UserID INT NOT NULL,
     OrderID INT NOT NULL,
-    SName VARCHAR(50) NOT NULL,
-    PName VARCHAR(50) NOT NULL,
+    SName VARCHAR(255) NOT NULL,
+    PName VARCHAR(255) NOT NULL,
     FDateTime DATETIME NOT NULL,
     Rating INT NOT NULL CHECK(Rating >= 1 AND Rating <= 5),
     Comment VARCHAR(500),
