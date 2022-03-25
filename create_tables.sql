@@ -89,7 +89,7 @@ CREATE TABLE Shiokee.Product_in_order(
     OPID INT NOT NULL,
     OPrice INT NOT NULL CHECK(OPrice >= 0),
     OQuantity INT NOT NULL CHECK(OQuantity > 0),
-    OStatus VARCHAR(255) NOT NULL DEFAULT '“being processed',
+    OStatus VARCHAR(255) NOT NULL DEFAULT 'being processed',
     DeliveryDate DATETIME,
     OrderID INT NOT NULL,
     SName VARCHAR(255) NOT NULL,
