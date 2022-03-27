@@ -11,7 +11,9 @@ WHERE NOT OStatus = 'returned' AND PO.OrderID = O.OrderID AND
 GROUP BY PO.SName
 )
 
-SELECT q1.SName, Revenue
-FROM subquery1 q1
-GROUP BY q1.SName, Revenue
-ORDER BY Revenue DESC
+SELECT *
+FROM subquery1 
+WHERE Revenue = 
+(SELECT MAX(Revenue)
+FROM subquery1 q1)
+
