@@ -8,6 +8,7 @@ SELECT PName, Rating
 FROM Shiokee.Feedback
 WHERE Rating=5 AND FDateTime >= DATEADD(DAY, 0, '2021/08/1') AND FDateTime <= DATEADD(DAY, 0, '2021/08/31')
 GROUP BY PName, Rating
+HAVING COUNT(Rating) >= 100
 )
 
 SELECT F.PName, AVG(CAST(F.Rating AS DECIMAL(10,2))) AS Average_Ratings
