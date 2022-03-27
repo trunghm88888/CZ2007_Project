@@ -7,14 +7,14 @@ USE DSS2g3;
 WITH subquery1 AS
 (SELECT Y.PName,TotalQuantity,DistinctUsers FROM( 
 	(SELECT PName, SUM(OQuantity) As TotalQuantity
-	FROM Shiokee.Product_in_order AS PIO
-	WHERE PIO.DeliveryDate >= DATEADD(DAY, 0, '2021/08/1') AND PIO.DeliveryDate <= DATEADD(DAY, 0, '2021/08/31')
+	FROM Shiokee.Product_in_order AS PIO, Shiokee.[Order] AS O
+	WHERE O.OrderDateTime >= DATEADD(DAY, 0, '2021/08/1') AND O.OrderDateTime <= DATEADD(DAY, 0, '2021/08/31')
 	GROUP BY PIO.PName) AS Y
 	INNER JOIN
 	(Select X.PName, Count(Distinct X.UserID) AS DistinctUsers
 		FROM(SELECT PName, UserID
 			FROM Shiokee.Product_in_order AS PIO, Shiokee.[Order] AS O
-			WHERE PIO.DeliveryDate >= DATEADD(DAY, 0, '2021/08/1') AND PIO.DeliveryDate <= DATEADD(DAY, 0, '2021/08/31') AND PIO.OrderID = O.OrderID
+			WHERE O.OrderDateTime >= DATEADD(DAY, 0, '2021/08/1') AND O.OrderDateTime <= DATEADD(DAY, 0, '2021/08/31') AND PIO.OrderID = O.OrderID
 			GROUP BY PIO.PName, O.UserID) AS X
 		GROUP BY X.PName) AS X2
 	ON Y.PName = X2.PName)
